@@ -1,562 +1,632 @@
-import React, { useState } from 'react';
-import { 
-  MessageCircle, Heart, Shield, Clock, Star, Check, Menu, X, 
-  ArrowRight, ChevronDown, CheckCircle, BookOpen, User, Gift, 
-  Zap, HelpCircle, Brain, Sparkles, Target, Flame 
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonie - L'IA au service des parents</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind pour la police Serif -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+                        sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
-const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeFaq, setActiveFaq] = useState(null);
-
-  const toggleFaq = (index) => {
-    setActiveFaq(activeFaq === index ? null : index);
-  };
-
-  const reviews = [
+    <!-- Import Map pour charger React et Lucide via ESM -->
+    <script type="importmap">
     {
-      name: "Sophie D.",
-      role: "Maman de 2 enfants",
-      text: "J'étais au bord du burnout. Avoir une réponse immédiate à 3h du matin quand mon fils refuse de dormir, ça a tout changé. Je ne crie plus, je comprends.",
-      stars: 5
-    },
-    {
-      name: "Marc L.",
-      role: "Papa d'une ado",
-      text: "Sceptique sur l'IA au début. Mais les scripts sont incroyables. C'est comme avoir Super Nanny dans sa poche, mais sans le jugement.",
-      stars: 5
-    },
-    {
-      name: "Dr. Amélie P.",
-      role: "Pédopsychiatre",
-      text: "Harmonie propose des conseils basés sur la théorie de l'attachement. C'est un complément idéal pour les parents qui ont besoin de soutien au quotidien.",
-      stars: 5
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "lucide-react": "https://esm.sh/lucide-react@0.294.0"
+        }
     }
-  ];
+    </script>
 
-  const features = [
-    {
-      icon: <Clock className="w-6 h-6 text-orange-700" />,
-      title: "Dispo 24h/24, 7j/7",
-      desc: "Les crises n'attendent pas le rendez-vous chez le psy. Obtenez de l'aide à l'instant T."
-    },
-    {
-      icon: <Shield className="w-6 h-6 text-orange-700" />,
-      title: "100% Privé & Sécurisé",
-      desc: "Vos conversations sont anonymes. Un espace sûr pour ventiler sans peur du jugement."
-    },
-    {
-      icon: <Heart className="w-6 h-6 text-orange-700" />,
-      title: "Bienveillance Scientifique",
-      desc: "Entraînée sur les meilleures méthodes de discipline positive et neurosciences."
-    }
-  ];
+    <!-- Babel Standalone pour compiler le JSX dans le navigateur -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* Styles personnalisés pour scrollbar et smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fafaf9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c2410c; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9a3412; 
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased">
+    <div id="root"></div>
 
-  const faqData = [
-    { 
-      q: "Est-ce que l'IA remplace un psychologue ou un coach ?", 
-      a: "Non. Harmonie est un outil de soutien immédiat pour les défis du quotidien. Pour des problématiques lourdes ou des troubles du développement, l'accompagnement d'un professionnel humain reste indispensable. Harmonie intervient comme un relais bienveillant entre deux séances ou pour les petits conflits journaliers." 
-    },
-    { 
-      q: "Comment l'IA peut-elle vraiment connaître mon enfant ?", 
-      a: "À chaque échange, vous affinez le profil de votre famille. Harmonie mémorise le tempérament de vos enfants, leurs sensibilités et vos valeurs éducatives pour que chaque script proposé soit de plus en plus pertinent et personnalisé." 
-    },
-    { 
-      q: "Pour quel âge est-ce le plus efficace ?", 
-      a: "Nos modèles sont optimisés pour les parents d'enfants de 18 mois à 12 ans. C'est la période où les défis de communication, de gestion des émotions et de limites sont les plus fréquents." 
-    },
-    { 
-      q: "Mes données sont-elles vraiment confidentielles ?", 
-      a: "C'est notre priorité absolue. Vos échanges sont chiffrés et anonymisés. Nous ne vendons aucune donnée à des tiers et vous pouvez supprimer votre historique familial à tout moment d'un simple clic." 
-    },
-    { 
-      q: "Puis-je tester avant de m'engager ?", 
-      a: "Oui, absolument. Nous offrons 7 jours d'essai complet avec toutes les fonctionnalités débloquées. Vous pouvez annuler en deux clics depuis les réglages de votre téléphone si cela ne vous convient pas." 
-    },
-    { 
-      q: "Est-ce basé sur la 'Discipline Positive' ?", 
-      a: "Oui, entre autres. Harmonie s'inspire des travaux d'Isabelle Filliozat, de Jane Nelsen et des dernières découvertes en neurosciences cognitives pour favoriser une autorité sans violence et basée sur le respect mutuel." 
-    }
-  ];
+    <!-- Script de l'application -->
+    <script type="text/babel" data-type="module">
+        import React, { useState } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            MessageCircle, Heart, Shield, Clock, Star, Check, Menu, X, 
+            ArrowRight, ChevronDown, CheckCircle, BookOpen, User, Gift, 
+            Zap, HelpCircle, Brain, Sparkles, Target, Flame 
+        } from 'lucide-react';
 
-  return (
-    <div className="font-sans text-stone-800 bg-stone-50 min-h-screen selection:bg-orange-100">
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
-        .animate-fade-in-up { animation: fadeInUp 0.7s ease-out; }
-        .animate-fade-in-down { animation: fadeInDown 0.3s ease-out; }
-      `}</style>
+        const App = () => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [activeFaq, setActiveFaq] = useState(null);
 
-      {/* Navigation */}
-      <nav className="fixed w-full bg-stone-50/95 backdrop-blur-md z-50 border-b border-stone-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-orange-700 rounded-full flex items-center justify-center text-white font-bold shadow-sm">H</div>
-              <span className="text-xl font-serif font-bold tracking-tight text-stone-900">Harmonie</span>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#comment-ca-marche" className="text-stone-700 hover:text-orange-700 font-semibold transition">Comment ça marche</a>
-              <a href="#comparatif" className="text-stone-700 hover:text-orange-700 font-semibold transition">Pourquoi nous ?</a>
-              <a href="#temoignages" className="text-stone-700 hover:text-orange-700 font-semibold transition">Témoignages</a>
-              <button className="bg-orange-700 text-white px-6 py-2.5 rounded-full font-bold hover:bg-orange-800 transition shadow-md hover:shadow-orange-900/20 transform hover:-translate-y-0.5">
-                Essayer Gratuitement
-              </button>
-            </div>
+            const toggleFaq = (index) => {
+                setActiveFaq(activeFaq === index ? null : index);
+            };
 
-            <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-stone-900 focus:outline-none" aria-label="Menu">
-                {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-b border-stone-200 shadow-2xl animate-fade-in">
-            <div className="px-4 pt-4 pb-8 space-y-2">
-              <a href="#comment-ca-marche" className="block text-stone-900 font-bold p-4 rounded-xl hover:bg-stone-50 border-b border-stone-100" onClick={() => setIsMenuOpen(false)}>Comment ça marche</a>
-              <a href="#comparatif" className="block text-stone-900 font-bold p-4 rounded-xl hover:bg-stone-50 border-b border-stone-100" onClick={() => setIsMenuOpen(false)}>Pourquoi nous ?</a>
-              <a href="#temoignages" className="block text-stone-900 font-bold p-4 rounded-xl hover:bg-stone-50 border-b border-stone-100" onClick={() => setIsMenuOpen(false)}>Témoignages</a>
-              <div className="pt-4">
-                <button className="w-full bg-orange-700 text-white px-6 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition-all">
-                  Essayer Gratuitement
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
+            const reviews = [
+                {
+                name: "Sophie D.",
+                role: "Maman de 2 enfants",
+                text: "J'étais au bord du burnout. Avoir une réponse immédiate à 3h du matin quand mon fils refuse de dormir, ça a tout changé. Je ne crie plus, je comprends.",
+                stars: 5
+                },
+                {
+                name: "Marc L.",
+                role: "Papa d'une ado",
+                text: "Sceptique sur l'IA au début. Mais les scripts sont incroyables. C'est comme avoir Super Nanny dans sa poche, mais sans le jugement.",
+                stars: 5
+                },
+                {
+                name: "Dr. Amélie P.",
+                role: "Pédopsychiatre",
+                text: "Harmonie propose des conseils basés sur la théorie de l'attachement. C'est un complément idéal pour les parents qui ont besoin de soutien au quotidien.",
+                stars: 5
+                }
+            ];
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-44 md:pb-24 px-4 overflow-hidden">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8 animate-fade-in-up">
-            <div className="inline-block bg-orange-100 text-orange-900 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide uppercase border border-orange-200 shadow-sm">
-              Nouveau : L'IA au service des parents
-            </div>
-            <h1 className="text-4xl md:text-6xl font-serif font-bold leading-tight text-stone-900">
-              Le manuel que votre enfant aurait dû apporter <span className="text-orange-700 italic">à la naissance.</span>
-            </h1>
-            <p className="text-lg md:text-xl text-stone-600 leading-relaxed max-w-lg">
-              Ne restez plus seul(e) face aux crises. Harmonie est votre coach parental de poche. Des scripts exacts pour savoir quoi dire, au moment où vous en avez besoin.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button className="bg-orange-700 text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-orange-800 transition shadow-xl hover:shadow-orange-700/30 flex items-center justify-center gap-3 transform hover:scale-105 duration-200">
-                Essayer Gratuitement <ArrowRight className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="flex items-center justify-start gap-2 text-stone-600 text-sm font-semibold pl-2">
-                <Check className="w-4 h-4 text-green-600" /> 7 jours offerts · Sans engagement
-            </div>
-            
-            <div className="pt-2 flex items-center gap-4 border-t border-stone-200 w-fit pr-8 mt-4">
-              <div className="flex -space-x-4 mt-4">
-                {[1,2,3,4].map(i => (
-                  <img key={i} src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="Utilisateur" className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
-                ))}
-              </div>
-              <p className="text-sm text-stone-700 mt-4">Rejoignez <strong className="text-stone-900">10,000+ parents</strong> apaisés.</p>
-            </div>
-          </div>
+            const features = [
+                {
+                icon: <Clock className="w-6 h-6 text-orange-700" />,
+                title: "Dispo 24h/24, 7j/7",
+                desc: "Les crises n'attendent pas le rendez-vous chez le psy. Obtenez de l'aide à l'instant T."
+                },
+                {
+                icon: <Shield className="w-6 h-6 text-orange-700" />,
+                title: "100% Privé & Sécurisé",
+                desc: "Vos conversations sont anonymes. Un espace sûr pour ventiler sans peur du jugement."
+                },
+                {
+                icon: <Heart className="w-6 h-6 text-orange-700" />,
+                title: "Bienveillance Scientifique",
+                desc: "Entraînée sur les meilleures méthodes de discipline positive et neurosciences."
+                }
+            ];
 
-          {/* Chat Demo */}
-          <div className="relative mx-auto w-full max-w-sm md:max-w-md mt-8 md:mt-0">
-            <div className="absolute inset-0 bg-orange-300 rounded-full filter blur-[60px] opacity-20 transform translate-y-10"></div>
-            <div className="relative bg-white rounded-[2.5rem] shadow-2xl border-8 border-stone-900 overflow-hidden transform rotate-1 hover:rotate-0 transition duration-500">
-              <div className="bg-stone-100 px-6 py-4 border-b border-stone-200 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                        <span className="text-orange-700 font-bold text-lg">H</span>
-                    </div>
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  </div>
-                  <div>
-                      <span className="font-bold text-stone-900 block leading-tight">Coach Harmonie</span>
-                      <span className="text-xs text-stone-500 font-medium tracking-wide uppercase">En ligne</span>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5 space-y-5 h-[420px] overflow-y-auto bg-stone-50/50">
-                <div className="flex justify-end">
-                  <div className="bg-stone-800 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] text-sm shadow-md font-medium">
-                    Mon fils de 4 ans me tape quand je lui dis "non". Je suis à bout, j'ai envie de crier. Que faire ?! 😩
-                  </div>
-                </div>
-                
-                <div className="flex justify-start">
-                  <div className="bg-white border border-stone-200 text-stone-800 rounded-2xl rounded-tl-none px-5 py-4 max-w-[95%] text-sm shadow-lg space-y-3">
-                    <p className="font-bold text-orange-700 uppercase text-xs tracking-wider">Solution immédiate</p>
-                    <p className="font-medium text-stone-800 italic">"Je ne te laisserai pas me taper. Je vois que tu es très en colère. C'est dur d'arrêter, je sais."</p>
-                    <p className="text-stone-600">Ensuite, propose une transition physique (un câlin fort ou taper dans un coussin).</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-3 border-t border-stone-200 bg-white">
-                <div className="h-12 bg-stone-100 rounded-full w-full flex items-center px-5 text-stone-500 font-medium text-sm shadow-inner">
-                  Écrivez votre situation...
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            const faqData = [
+                { 
+                q: "Est-ce que l'IA remplace un psychologue ou un coach ?", 
+                a: "Non. Harmonie est un outil de soutien immédiat pour les défis du quotidien. Pour des problématiques lourdes ou des troubles du développement, l'accompagnement d'un professionnel humain reste indispensable. Harmonie intervient comme un relais bienveillant entre deux séances ou pour les petits conflits journaliers." 
+                },
+                { 
+                q: "Comment l'IA peut-elle vraiment connaître mon enfant ?", 
+                a: "À chaque échange, vous affinez le profil de votre famille. Harmonie mémorise le tempérament de vos enfants, leurs sensibilités et vos valeurs éducatives pour que chaque script proposé soit de plus en plus pertinent et personnalisé." 
+                },
+                { 
+                q: "Pour quel âge est-ce le plus efficace ?", 
+                a: "Nos modèles sont optimisés pour les parents d'enfants de 18 mois à 12 ans. C'est la période où les défis de communication, de gestion des émotions et de limites sont les plus fréquents." 
+                },
+                { 
+                q: "Mes données sont-elles vraiment confidentielles ?", 
+                a: "C'est notre priorité absolue. Vos échanges sont chiffrés et anonymisés. Nous ne vendons aucune donnée à des tiers et vous pouvez supprimer votre historique familial à tout moment d'un simple clic." 
+                },
+                { 
+                q: "Puis-je tester avant de m'engager ?", 
+                a: "Oui, absolument. Nous offrons 7 jours d'essai complet avec toutes les fonctionnalités débloquées. Vous pouvez annuler en deux clics depuis les réglages de votre téléphone si cela ne vous convient pas." 
+                },
+                { 
+                q: "Est-ce basé sur la 'Discipline Positive' ?", 
+                a: "Oui, entre autres. Harmonie s'inspire des travaux d'Isabelle Filliozat, de Jane Nelsen et des dernières découvertes en neurosciences cognitives pour favoriser une autorité sans violence et basée sur le respect mutuel." 
+                }
+            ];
 
-      {/* Problem Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900">
-            La parentalité est le job le plus dur du monde. <br/>
-            <span className="text-stone-400">Et vous n'avez pas eu de formation.</span>
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8 text-left">
-            <div className="p-8 bg-stone-50 rounded-2xl border border-stone-100 hover:border-orange-200 transition hover:shadow-lg">
-              <div className="text-4xl mb-4">🤯</div>
-              <h3 className="font-bold text-lg mb-2">La surcharge mentale</h3>
-              <p className="text-stone-600 text-sm leading-relaxed">Vous gérez tout, tout le temps. Quand la crise arrive, votre cerveau est déjà saturé.</p>
-            </div>
-            <div className="p-8 bg-stone-50 rounded-2xl border border-stone-100 hover:border-orange-200 transition hover:shadow-lg">
-              <div className="text-4xl mb-4">😔</div>
-              <h3 className="font-bold text-lg mb-2">La culpabilité du soir</h3>
-              <p className="text-stone-600 text-sm leading-relaxed">Se coucher en regrettant d'avoir crié. Se promettre que "demain sera mieux".</p>
-            </div>
-            <div className="p-8 bg-stone-50 rounded-2xl border border-stone-100 hover:border-orange-200 transition hover:shadow-lg">
-              <div className="text-4xl mb-4">🤷‍♀️</div>
-              <h3 className="font-bold text-lg mb-2">Les conseils flous</h3>
-              <p className="text-stone-600 text-sm leading-relaxed">Instagram dit blanc, votre entourage dit noir. Vous avez besoin d'une ligne directrice.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+            return (
+                <div className="font-sans text-stone-800 bg-stone-50 min-h-screen selection:bg-orange-100">
+                <style>{`
+                    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+                    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+                    .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+                    .animate-fade-in-up { animation: fadeInUp 0.7s ease-out; }
+                    .animate-fade-in-down { animation: fadeInDown 0.3s ease-out; }
+                `}</style>
 
-      {/* Features / How it works */}
-      <section id="comment-ca-marche" className="py-20 bg-stone-900 text-stone-100">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Plus qu'une application, un village dans votre poche.</h2>
-            <p className="text-stone-400 max-w-2xl mx-auto text-lg font-medium">Harmonie utilise une IA avancée formée aux dernières recherches en psychologie de l'enfant.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-10">
-            {features.map((feature, idx) => (
-              <div key={idx} className="bg-stone-800 p-8 rounded-2xl border border-stone-700 hover:bg-stone-750 hover:border-orange-500/50 transition duration-300">
-                <div className="w-14 h-14 bg-stone-700 rounded-2xl flex items-center justify-center mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
-                <p className="text-stone-400 leading-relaxed">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison Table */}
-      <section id="comparatif" className="py-24 bg-stone-100 border-t border-stone-200">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">
-              Pourquoi les anciennes méthodes ne suffisent plus
-            </h2>
-          </div>
-          <div className="overflow-hidden rounded-3xl border border-stone-200 shadow-xl bg-white">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[650px]">
-                <thead>
-                  <tr className="bg-stone-50">
-                    <th className="p-6 border-b border-stone-200 text-stone-500 font-bold text-xs uppercase tracking-widest">Solution</th>
-                    <th className="p-6 border-b border-stone-200 text-stone-900 font-bold w-1/4">
+                {/* Navigation */}
+                <nav className="fixed w-full bg-stone-50/95 backdrop-blur-md z-50 border-b border-stone-200">
+                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-16">
                         <div className="flex items-center gap-2">
-                             <BookOpen className="w-5 h-5 text-stone-400"/> Livres & Blogs
+                        <div className="w-8 h-8 bg-orange-700 rounded-full flex items-center justify-center text-white font-bold shadow-sm">H</div>
+                        <span className="text-xl font-serif font-bold tracking-tight text-stone-900">Harmonie</span>
                         </div>
-                    </th>
-                    <th className="p-6 border-b border-stone-200 text-stone-900 font-bold w-1/4">
-                        <div className="flex items-center gap-2">
-                             <User className="w-5 h-5 text-stone-400"/> Psy ou Coach
+                        
+                        <div className="hidden md:flex items-center space-x-8">
+                        <a href="#comment-ca-marche" className="text-stone-700 hover:text-orange-700 font-semibold transition">Comment ça marche</a>
+                        <a href="#comparatif" className="text-stone-700 hover:text-orange-700 font-semibold transition">Pourquoi nous ?</a>
+                        <a href="#temoignages" className="text-stone-700 hover:text-orange-700 font-semibold transition">Témoignages</a>
+                        <button className="bg-orange-700 text-white px-6 py-2.5 rounded-full font-bold hover:bg-orange-800 transition shadow-md hover:shadow-orange-900/20 transform hover:-translate-y-0.5">
+                            Essayer Gratuitement
+                        </button>
                         </div>
-                    </th>
-                    <th className="p-6 border-b border-orange-200 bg-orange-100 text-orange-900 font-bold w-1/4">
-                        <div className="flex items-center gap-2">
-                             <Heart className="w-5 h-5 fill-current text-orange-700"/> Harmonie
-                        </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-100">
-                  <tr className="group hover:bg-stone-50 transition">
-                    <td className="p-6 font-bold text-stone-700">Dispo à 3h du matin</td>
-                    <td className="p-6 text-stone-500 font-medium">❌ Impossible</td>
-                    <td className="p-6 text-stone-500 font-medium">❌ Rdv différé</td>
-                    <td className="p-6 bg-orange-50 font-bold text-green-700 italic">✅ Immédiate 24/7</td>
-                  </tr>
-                  <tr>
-                    <td className="p-6 font-bold text-stone-700">Coût moyen investi</td>
-                    <td className="p-6 text-stone-500 font-medium">30€ à 300€+ / an</td>
-                    <td className="p-6 text-stone-500 font-medium">70€ / séance</td>
-                    <td className="p-6 bg-orange-50 font-bold text-green-700">~7€ / mois</td>
-                  </tr>
-                  <tr>
-                    <td className="p-6 font-bold text-stone-700">Action en crise</td>
-                    <td className="p-6 text-stone-500 text-sm font-medium">Théorique (à mémoriser)</td>
-                    <td className="p-6 text-stone-500 text-sm font-medium">Support différé</td>
-                    <td className="p-6 bg-orange-50 font-bold text-stone-900 text-sm">Scripts guidés pas-à-pas</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Why Not ChatGPT Section - ENRICHED VERSION */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16 space-y-4">
-                <h2 className="text-3xl md:text-5xl font-serif font-bold text-stone-900 italic">"Pourquoi ne pas utiliser ChatGPT ?"</h2>
-                <p className="text-stone-600 max-w-2xl mx-auto text-lg font-medium">
-                    Une IA générique est une encyclopédie. Harmonie est un partenaire qui connaît votre famille.
-                </p>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-8 items-stretch">
-                {/* ChatGPT Column */}
-                <div className="bg-stone-50 rounded-[2.5rem] p-8 md:p-12 border border-stone-200 opacity-80 hover:opacity-100 transition duration-500 grayscale hover:grayscale-0">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="p-3 bg-stone-200 rounded-2xl">
-                            <Brain className="w-8 h-8 text-stone-600" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-bold text-stone-900 uppercase tracking-tighter">IA Classique</h3>
-                            <p className="text-sm text-stone-500 font-bold">L'approche "Copier-Coller"</p>
+                        <div className="md:hidden">
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-stone-900 focus:outline-none" aria-label="Menu">
+                            {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+                        </button>
                         </div>
                     </div>
-
-                    <div className="space-y-8">
-                        <div className="flex gap-5">
-                            <div className="bg-stone-200 p-2 rounded-lg h-fit">
-                                <Flame className="w-5 h-5 text-stone-400" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-1">Pas de contexte émotionnel</h4>
-                                <p className="text-sm text-stone-600 leading-relaxed">Elle vous donne 10 étapes théoriques quand vous êtes à bout de nerfs. Qui a le temps de lire un pavé en pleine crise ?</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-5">
-                            <div className="bg-stone-200 p-2 rounded-lg h-fit">
-                                <X className="w-5 h-5 text-stone-400" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-1">Amnésie systématique</h4>
-                                <p className="text-sm text-stone-600 leading-relaxed">Elle oublie que votre fils est hypersensible au bruit ou que vous avez déjà testé cette méthode hier soir.</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-5">
-                            <div className="bg-stone-200 p-2 rounded-lg h-fit">
-                                <Target className="w-5 h-5 text-stone-400" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-1">Conseils "moyens"</h4>
-                                <p className="text-sm text-stone-600 leading-relaxed">Elle pioche dans tout Internet, y compris les vieilles méthodes punitives. Trop risqué pour votre éducation.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Harmonie Column */}
-                <div className="bg-orange-50 rounded-[2.5rem] p-8 md:p-12 border-2 border-orange-200 shadow-2xl shadow-orange-700/10 relative">
-                    <div className="absolute -top-4 -right-4 bg-orange-700 text-white px-6 py-2 rounded-full font-black text-sm uppercase tracking-widest shadow-lg rotate-3">
-                        Promesse Unique
                     </div>
                     
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="p-3 bg-orange-700 rounded-2xl shadow-lg shadow-orange-700/20">
-                            <Sparkles className="w-8 h-8 text-white" />
+                    {/* Mobile Menu */}
+                    {isMenuOpen && (
+                    <div className="md:hidden bg-white border-b border-stone-200 shadow-2xl animate-fade-in">
+                        <div className="px-4 pt-4 pb-8 space-y-2">
+                        <a href="#comment-ca-marche" className="block text-stone-900 font-bold p-4 rounded-xl hover:bg-stone-50 border-b border-stone-100" onClick={() => setIsMenuOpen(false)}>Comment ça marche</a>
+                        <a href="#comparatif" className="block text-stone-900 font-bold p-4 rounded-xl hover:bg-stone-50 border-b border-stone-100" onClick={() => setIsMenuOpen(false)}>Pourquoi nous ?</a>
+                        <a href="#temoignages" className="block text-stone-900 font-bold p-4 rounded-xl hover:bg-stone-50 border-b border-stone-100" onClick={() => setIsMenuOpen(false)}>Témoignages</a>
+                        <div className="pt-4">
+                            <button className="w-full bg-orange-700 text-white px-6 py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition-all">
+                            Essayer Gratuitement
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                    )}
+                </nav>
+
+                {/* Hero Section */}
+                <section className="pt-32 pb-16 md:pt-44 md:pb-24 px-4 overflow-hidden">
+                    <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                    <div className="space-y-8 animate-fade-in-up">
+                        <div className="inline-block bg-orange-100 text-orange-900 px-4 py-1.5 rounded-full text-sm font-bold tracking-wide uppercase border border-orange-200 shadow-sm">
+                        Nouveau : L'IA au service des parents
+                        </div>
+                        <h1 className="text-4xl md:text-6xl font-serif font-bold leading-tight text-stone-900">
+                        Le manuel que votre enfant aurait dû apporter <span className="text-orange-700 italic">à la naissance.</span>
+                        </h1>
+                        <p className="text-lg md:text-xl text-stone-600 leading-relaxed max-w-lg">
+                        Ne restez plus seul(e) face aux crises. Harmonie est votre coach parental de poche. Des scripts exacts pour savoir quoi dire, au moment où vous en avez besoin.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button className="bg-orange-700 text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-orange-800 transition shadow-xl hover:shadow-orange-700/30 flex items-center justify-center gap-3 transform hover:scale-105 duration-200">
+                            Essayer Gratuitement <ArrowRight className="w-6 h-6" />
+                        </button>
+                        </div>
+                        <div className="flex items-center justify-start gap-2 text-stone-600 text-sm font-semibold pl-2">
+                            <Check className="w-4 h-4 text-green-600" /> 7 jours offerts · Sans engagement
+                        </div>
+                        
+                        <div className="pt-2 flex items-center gap-4 border-t border-stone-200 w-fit pr-8 mt-4">
+                        <div className="flex -space-x-4 mt-4">
+                            {[1,2,3,4].map(i => (
+                            <img key={i} src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="Utilisateur" className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
+                            ))}
+                        </div>
+                        <p className="text-sm text-stone-700 mt-4">Rejoignez <strong className="text-stone-900">10,000+ parents</strong> apaisés.</p>
+                        </div>
+                    </div>
+
+                    {/* Chat Demo */}
+                    <div className="relative mx-auto w-full max-w-sm md:max-w-md mt-8 md:mt-0">
+                        <div className="absolute inset-0 bg-orange-300 rounded-full filter blur-[60px] opacity-20 transform translate-y-10"></div>
+                        <div className="relative bg-white rounded-[2.5rem] shadow-2xl border-8 border-stone-900 overflow-hidden transform rotate-1 hover:rotate-0 transition duration-500">
+                        <div className="bg-stone-100 px-6 py-4 border-b border-stone-200 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                    <span className="text-orange-700 font-bold text-lg">H</span>
+                                </div>
+                                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                            </div>
+                            <div>
+                                <span className="font-bold text-stone-900 block leading-tight">Coach Harmonie</span>
+                                <span className="text-xs text-stone-500 font-medium tracking-wide uppercase">En ligne</span>
+                            </div>
+                            </div>
+                        </div>
+                        <div className="p-5 space-y-5 h-[420px] overflow-y-auto bg-stone-50/50">
+                            <div className="flex justify-end">
+                            <div className="bg-stone-800 text-white rounded-2xl rounded-tr-none px-5 py-3.5 max-w-[85%] text-sm shadow-md font-medium">
+                                Mon fils de 4 ans me tape quand je lui dis "non". Je suis à bout, j'ai envie de crier. Que faire ?! 😩
+                            </div>
+                            </div>
+                            
+                            <div className="flex justify-start">
+                            <div className="bg-white border border-stone-200 text-stone-800 rounded-2xl rounded-tl-none px-5 py-4 max-w-[95%] text-sm shadow-lg space-y-3">
+                                <p className="font-bold text-orange-700 uppercase text-xs tracking-wider">Solution immédiate</p>
+                                <p className="font-medium text-stone-800 italic">"Je ne te laisserai pas me taper. Je vois que tu es très en colère. C'est dur d'arrêter, je sais."</p>
+                                <p className="text-stone-600">Ensuite, propose une transition physique (un câlin fort ou taper dans un coussin).</p>
+                            </div>
+                            </div>
+                        </div>
+                        <div className="p-3 border-t border-stone-200 bg-white">
+                            <div className="h-12 bg-stone-100 rounded-full w-full flex items-center px-5 text-stone-500 font-medium text-sm shadow-inner">
+                            Écrivez votre situation...
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                {/* Problem Section */}
+                <section className="py-20 bg-white">
+                    <div className="max-w-4xl mx-auto px-4 text-center space-y-12">
+                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900">
+                        La parentalité est le job le plus dur du monde. <br/>
+                        <span className="text-stone-400">Et vous n'avez pas eu de formation.</span>
+                    </h2>
+                    
+                    <div className="grid md:grid-cols-3 gap-8 text-left">
+                        <div className="p-8 bg-stone-50 rounded-2xl border border-stone-100 hover:border-orange-200 transition hover:shadow-lg">
+                        <div className="text-4xl mb-4">🤯</div>
+                        <h3 className="font-bold text-lg mb-2">La surcharge mentale</h3>
+                        <p className="text-stone-600 text-sm leading-relaxed">Vous gérez tout, tout le temps. Quand la crise arrive, votre cerveau est déjà saturé.</p>
+                        </div>
+                        <div className="p-8 bg-stone-50 rounded-2xl border border-stone-100 hover:border-orange-200 transition hover:shadow-lg">
+                        <div className="text-4xl mb-4">😔</div>
+                        <h3 className="font-bold text-lg mb-2">La culpabilité du soir</h3>
+                        <p className="text-stone-600 text-sm leading-relaxed">Se coucher en regrettant d'avoir crié. Se promettre que "demain sera mieux".</p>
+                        </div>
+                        <div className="p-8 bg-stone-50 rounded-2xl border border-stone-100 hover:border-orange-200 transition hover:shadow-lg">
+                        <div className="text-4xl mb-4">🤷‍♀️</div>
+                        <h3 className="font-bold text-lg mb-2">Les conseils flous</h3>
+                        <p className="text-stone-600 text-sm leading-relaxed">Instagram dit blanc, votre entourage dit noir. Vous avez besoin d'une ligne directrice.</p>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                {/* Features / How it works */}
+                <section id="comment-ca-marche" className="py-20 bg-stone-900 text-stone-100">
+                    <div className="max-w-6xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Plus qu'une application, un village dans votre poche.</h2>
+                        <p className="text-stone-400 max-w-2xl mx-auto text-lg font-medium">Harmonie utilise une IA avancée formée aux dernières recherches en psychologie de l'enfant.</p>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-10">
+                        {features.map((feature, idx) => (
+                        <div key={idx} className="bg-stone-800 p-8 rounded-2xl border border-stone-700 hover:bg-stone-750 hover:border-orange-500/50 transition duration-300">
+                            <div className="w-14 h-14 bg-stone-700 rounded-2xl flex items-center justify-center mb-6">
+                            {feature.icon}
+                            </div>
+                            <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
+                            <p className="text-stone-400 leading-relaxed">{feature.desc}</p>
+                        </div>
+                        ))}
+                    </div>
+                    </div>
+                </section>
+
+                {/* Comparison Table */}
+                <section id="comparatif" className="py-24 bg-stone-100 border-t border-stone-200">
+                    <div className="max-w-5xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">
+                        Pourquoi les anciennes méthodes ne suffisent plus
+                        </h2>
+                    </div>
+                    <div className="overflow-hidden rounded-3xl border border-stone-200 shadow-xl bg-white">
+                        <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse min-w-[650px]">
+                            <thead>
+                            <tr className="bg-stone-50">
+                                <th className="p-6 border-b border-stone-200 text-stone-500 font-bold text-xs uppercase tracking-widest">Solution</th>
+                                <th className="p-6 border-b border-stone-200 text-stone-900 font-bold w-1/4">
+                                    <div className="flex items-center gap-2">
+                                        <BookOpen className="w-5 h-5 text-stone-400"/> Livres & Blogs
+                                    </div>
+                                </th>
+                                <th className="p-6 border-b border-stone-200 text-stone-900 font-bold w-1/4">
+                                    <div className="flex items-center gap-2">
+                                        <User className="w-5 h-5 text-stone-400"/> Psy ou Coach
+                                    </div>
+                                </th>
+                                <th className="p-6 border-b border-orange-200 bg-orange-100 text-orange-900 font-bold w-1/4">
+                                    <div className="flex items-center gap-2">
+                                        <Heart className="w-5 h-5 fill-current text-orange-700"/> Harmonie
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody className="divide-y divide-stone-100">
+                            <tr className="group hover:bg-stone-50 transition">
+                                <td className="p-6 font-bold text-stone-700">Dispo à 3h du matin</td>
+                                <td className="p-6 text-stone-500 font-medium">❌ Impossible</td>
+                                <td className="p-6 text-stone-500 font-medium">❌ Rdv différé</td>
+                                <td className="p-6 bg-orange-50 font-bold text-green-700 italic">✅ Immédiate 24/7</td>
+                            </tr>
+                            <tr>
+                                <td className="p-6 font-bold text-stone-700">Coût moyen investi</td>
+                                <td className="p-6 text-stone-500 font-medium">30€ à 300€+ / an</td>
+                                <td className="p-6 text-stone-500 font-medium">70€ / séance</td>
+                                <td className="p-6 bg-orange-50 font-bold text-green-700">~7€ / mois</td>
+                            </tr>
+                            <tr>
+                                <td className="p-6 font-bold text-stone-700">Action en crise</td>
+                                <td className="p-6 text-stone-500 text-sm font-medium">Théorique (à mémoriser)</td>
+                                <td className="p-6 text-stone-500 text-sm font-medium">Support différé</td>
+                                <td className="p-6 bg-orange-50 font-bold text-stone-900 text-sm">Scripts guidés pas-à-pas</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                {/* Why Not ChatGPT Section - ENRICHED VERSION */}
+                <section className="py-24 bg-white overflow-hidden">
+                    <div className="max-w-6xl mx-auto px-4">
+                        <div className="text-center mb-16 space-y-4">
+                            <h2 className="text-3xl md:text-5xl font-serif font-bold text-stone-900 italic">"Pourquoi ne pas utiliser ChatGPT ?"</h2>
+                            <p className="text-stone-600 max-w-2xl mx-auto text-lg font-medium">
+                                Une IA générique est une encyclopédie. Harmonie est un partenaire qui connaît votre famille.
+                            </p>
+                        </div>
+
+                        <div className="grid lg:grid-cols-2 gap-8 items-stretch">
+                            {/* ChatGPT Column */}
+                            <div className="bg-stone-50 rounded-[2.5rem] p-8 md:p-12 border border-stone-200 opacity-80 hover:opacity-100 transition duration-500 grayscale hover:grayscale-0">
+                                <div className="flex items-center gap-3 mb-8">
+                                    <div className="p-3 bg-stone-200 rounded-2xl">
+                                        <Brain className="w-8 h-8 text-stone-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-stone-900 uppercase tracking-tighter">IA Classique</h3>
+                                        <p className="text-sm text-stone-500 font-bold">L'approche "Copier-Coller"</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-8">
+                                    <div className="flex gap-5">
+                                        <div className="bg-stone-200 p-2 rounded-lg h-fit">
+                                            <Flame className="w-5 h-5 text-stone-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 mb-1">Pas de contexte émotionnel</h4>
+                                            <p className="text-sm text-stone-600 leading-relaxed">Elle vous donne 10 étapes théoriques quand vous êtes à bout de nerfs. Qui a le temps de lire un pavé en pleine crise ?</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-5">
+                                        <div className="bg-stone-200 p-2 rounded-lg h-fit">
+                                            <X className="w-5 h-5 text-stone-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 mb-1">Amnésie systématique</h4>
+                                            <p className="text-sm text-stone-600 leading-relaxed">Elle oublie que votre fils est hypersensible au bruit ou que vous avez déjà testé cette méthode hier soir.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-5">
+                                        <div className="bg-stone-200 p-2 rounded-lg h-fit">
+                                            <Target className="w-5 h-5 text-stone-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 mb-1">Conseils "moyens"</h4>
+                                            <p className="text-sm text-stone-600 leading-relaxed">Elle pioche dans tout Internet, y compris les vieilles méthodes punitives. Trop risqué pour votre éducation.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Harmonie Column */}
+                            <div className="bg-orange-50 rounded-[2.5rem] p-8 md:p-12 border-2 border-orange-200 shadow-2xl shadow-orange-700/10 relative">
+                                <div className="absolute -top-4 -right-4 bg-orange-700 text-white px-6 py-2 rounded-full font-black text-sm uppercase tracking-widest shadow-lg rotate-3">
+                                    Promesse Unique
+                                </div>
+                                
+                                <div className="flex items-center gap-3 mb-8">
+                                    <div className="p-3 bg-orange-700 rounded-2xl shadow-lg shadow-orange-700/20">
+                                        <Sparkles className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-orange-900 uppercase tracking-tighter">Harmonie IA</h3>
+                                        <p className="text-sm text-orange-700 font-bold">L'approche "Zéro Charge Mentale"</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-8">
+                                    <div className="flex gap-5">
+                                        <div className="bg-orange-600 p-2 rounded-lg h-fit shadow-md">
+                                            <MessageCircle className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 mb-1">Scripts Actionnables</h4>
+                                            <p className="text-sm text-stone-700 leading-relaxed">Pas de théorie. Des phrases mot-à-mot à prononcer tout de suite. On réfléchit pour vous quand vous ne pouvez plus.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-5">
+                                        <div className="bg-orange-600 p-2 rounded-lg h-fit shadow-md">
+                                            <Heart className="w-5 h-5 text-white fill-current" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 mb-1">La Mémoire du Cœur</h4>
+                                            <p className="text-sm text-stone-700 leading-relaxed">Harmonie sait que Léo a peur du noir et que vous travaillez tard le mardi. Elle adapte ses solutions à VOTRE réalité.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-5">
+                                        <div className="bg-orange-600 p-2 rounded-lg h-fit shadow-md">
+                                            <CheckCircle className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 mb-1">Éthique Non-Violente</h4>
+                                            <p className="text-sm text-stone-700 leading-relaxed">Un filtre strict garantit que chaque conseil respecte les neurosciences et la dignité de l'enfant. Jamais de conseils toxiques.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-12 p-6 bg-white/60 rounded-2xl border border-orange-200 backdrop-blur-sm">
+                                    <p className="text-xs text-orange-800 font-black uppercase tracking-widest mb-2 italic">Dernier échange :</p>
+                                    <p className="text-sm font-serif italic text-stone-800">"Tu as dit que Louise était fatiguée cette semaine à cause de l'école. On ne va pas insister sur le rangement ce soir, essayons plutôt..."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Testimonials */}
+                <section id="temoignages" className="py-20 bg-stone-50">
+                    <div className="max-w-6xl mx-auto px-4">
+                    <h2 className="text-center text-3xl font-serif font-bold mb-12 text-stone-900">Ils ont retrouvé la sérénité</h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {reviews.map((review, idx) => (
+                        <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition">
+                            <div className="flex text-yellow-400 mb-4">
+                            {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-current" />)}
+                            </div>
+                            <p className="text-stone-700 mb-6 italic text-lg font-medium leading-relaxed">"{review.text}"</p>
+                            <div>
+                            <p className="font-bold text-stone-900">{review.name}</p>
+                            <p className="text-xs text-stone-500 uppercase tracking-wide font-bold">{review.role}</p>
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                    </div>
+                </section>
+
+                {/* FAQ Section */}
+                <section className="py-24 bg-white">
+                    <div className="max-w-3xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full text-orange-700 mb-4">
+                            <HelpCircle className="w-8 h-8" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">Questions Fréquentes</h2>
+                    </div>
+                    <div className="space-y-4">
+                        {faqData.map((item, idx) => (
+                        <div key={idx} className="bg-stone-50 rounded-2xl border border-stone-200 overflow-hidden shadow-sm hover:border-orange-200 transition-colors">
+                            <button onClick={() => toggleFaq(idx)} className="w-full flex justify-between items-center p-6 text-left">
+                            <span className="font-bold text-stone-900 text-lg pr-4">{item.q}</span>
+                            <div className={`transition-transform duration-300 ${activeFaq === idx ? 'rotate-180' : ''}`}>
+                                <ChevronDown className={activeFaq === idx ? 'text-orange-700' : 'text-stone-400'}/>
+                            </div>
+                            </button>
+                            {activeFaq === idx && (
+                            <div className="px-6 pb-6 text-stone-600 font-medium leading-relaxed border-t border-stone-100 pt-4 animate-fade-in-down">
+                                {item.a}
+                            </div>
+                            )}
+                        </div>
+                        ))}
+                    </div>
+                    </div>
+                </section>
+
+                {/* Pricing / CTA Final */}
+                <section id="prix" className="py-24 bg-stone-900 text-center px-4 overflow-hidden relative">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-orange-700/10 rounded-full blur-[120px]"></div>
+                    <div className="max-w-4xl mx-auto relative z-10">
+                    <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-12">L'apaisement commence aujourd'hui.</h2>
+                    
+                    <div className="bg-white rounded-[2.5rem] p-8 md:p-12 max-w-2xl mx-auto shadow-2xl relative border-t-8 border-orange-700">
+                        <div className="absolute top-6 right-6 flex items-center gap-1.5 bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                        <Gift className="w-3 h-3" /> 2 mois offerts
+                        </div>
+                        
+                        <div className="mb-10">
+                        <div className="text-stone-500 font-bold tracking-widest uppercase text-xs mb-3">Abonnement Annuel Premium</div>
+                        <div className="flex items-baseline justify-center gap-2">
+                            <span className="text-7xl font-bold text-stone-900 tracking-tighter">7,50€</span>
+                            <span className="text-stone-500 font-bold text-xl">/ mois</span>
+                        </div>
+                        <p className="text-stone-400 font-bold text-sm mt-2">Facturé annuellement (89€)</p>
+                        </div>
+
+                        <div className="grid sm:grid-cols-2 gap-4 mb-10 text-left">
+                        {["Accès illimité 24h/24", "Scripts personnalisés", "Mémoire familiale", "Éducation Positive", "Support immédiat", "Support Prioritaire"].map((benefit, i) => (
+                            <div key={i} className="flex items-center gap-3 text-stone-700 font-bold text-sm">
+                            <div className="w-5 h-5 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 shrink-0">
+                                <Check className="w-3 h-3 stroke-[3px]" />
+                            </div>
+                            {benefit}
+                            </div>
+                        ))}
+                        </div>
+                        
+                        <div className="space-y-4">
+                        <button className="w-full bg-orange-700 text-white py-5 px-4 rounded-2xl font-black text-lg hover:bg-orange-800 transition shadow-xl shadow-orange-900/30 flex items-center justify-center gap-2 whitespace-nowrap overflow-hidden">
+                            <Zap className="w-5 h-5 fill-current shrink-0" /> Commencer l'essai gratuit
+                        </button>
+                        <p className="text-xs text-stone-400 font-bold uppercase tracking-tight">7 jours d'essai gratuit · Sans engagement</p>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 text-stone-500 font-bold text-sm uppercase tracking-widest">
+                        <div className="flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-stone-600" /> Paiement Sécurisé
+                        </div>
+                        <div className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-stone-600" /> Satisfait ou remboursé
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="bg-white border-t border-stone-200 pt-16 pb-8">
+                    <div className="max-w-6xl mx-auto px-4">
+                    <div className="grid md:grid-cols-4 gap-12 mb-12">
+                        <div className="col-span-1 md:col-span-2">
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 bg-orange-700 rounded-full flex items-center justify-center text-white font-bold">H</div>
+                            <span className="text-xl font-serif font-bold text-stone-900">Harmonie</span>
+                        </div>
+                        <p className="text-stone-600 font-bold max-w-sm">
+                            Rendre la parentalité plus douce, une réponse à la fois.
+                        </p>
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-orange-900 uppercase tracking-tighter">Harmonie IA</h3>
-                            <p className="text-sm text-orange-700 font-bold">L'approche "Zéro Charge Mentale"</p>
+                        <h4 className="font-extrabold text-stone-900 mb-4 uppercase text-xs tracking-widest">Légal</h4>
+                        <ul className="space-y-3 text-sm text-stone-600 font-bold">
+                            <li><a href="#" className="hover:text-orange-700 transition">Mentions Légales</a></li>
+                            <li><a href="#" className="hover:text-orange-700 transition">Confidentialité</a></li>
+                            <li><a href="#" className="hover:text-orange-700 transition">CGV</a></li>
+                        </ul>
+                        </div>
+                        <div>
+                        <h4 className="font-extrabold text-stone-900 mb-4 uppercase text-xs tracking-widest">Contact</h4>
+                        <ul className="space-y-3 text-sm text-stone-600 font-bold">
+                            <li>hello@harmonie-app.com</li>
+                            <li>Paris, France</li>
+                        </ul>
                         </div>
                     </div>
-
-                    <div className="space-y-8">
-                        <div className="flex gap-5">
-                            <div className="bg-orange-600 p-2 rounded-lg h-fit shadow-md">
-                                <MessageCircle className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-1">Scripts Actionnables</h4>
-                                <p className="text-sm text-stone-700 leading-relaxed">Pas de théorie. Des phrases mot-à-mot à prononcer tout de suite. On réfléchit pour vous quand vous ne pouvez plus.</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-5">
-                            <div className="bg-orange-600 p-2 rounded-lg h-fit shadow-md">
-                                <Heart className="w-5 h-5 text-white fill-current" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-1">La Mémoire du Cœur</h4>
-                                <p className="text-sm text-stone-700 leading-relaxed">Harmonie sait que Léo a peur du noir et que vous travaillez tard le mardi. Elle adapte ses solutions à VOTRE réalité.</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-5">
-                            <div className="bg-orange-600 p-2 rounded-lg h-fit shadow-md">
-                                <CheckCircle className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-stone-900 mb-1">Éthique Non-Violente</h4>
-                                <p className="text-sm text-stone-700 leading-relaxed">Un filtre strict garantit que chaque conseil respecte les neurosciences et la dignité de l'enfant. Jamais de conseils toxiques.</p>
-                            </div>
-                        </div>
+                    <div className="text-center text-xs text-stone-400 pt-8 border-t border-stone-100 font-bold uppercase tracking-widest">
+                        &copy; 2024 Harmonie App. Tous droits réservés.
                     </div>
-
-                    <div className="mt-12 p-6 bg-white/60 rounded-2xl border border-orange-200 backdrop-blur-sm">
-                        <p className="text-xs text-orange-800 font-black uppercase tracking-widest mb-2 italic">Dernier échange :</p>
-                        <p className="text-sm font-serif italic text-stone-800">"Tu as dit que Louise était fatiguée cette semaine à cause de l'école. On ne va pas insister sur le rangement ce soir, essayons plutôt..."</p>
                     </div>
+                </footer>
                 </div>
-            </div>
-        </div>
-      </section>
+            );
+        };
 
-      {/* Testimonials */}
-      <section id="temoignages" className="py-20 bg-stone-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-center text-3xl font-serif font-bold mb-12 text-stone-900">Ils ont retrouvé la sérénité</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {reviews.map((review, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition">
-                <div className="flex text-yellow-400 mb-4">
-                  {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-current" />)}
-                </div>
-                <p className="text-stone-700 mb-6 italic text-lg font-medium leading-relaxed">"{review.text}"</p>
-                <div>
-                  <p className="font-bold text-stone-900">{review.name}</p>
-                  <p className="text-xs text-stone-500 uppercase tracking-wide font-bold">{review.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full text-orange-700 mb-4">
-                <HelpCircle className="w-8 h-8" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-4">Questions Fréquentes</h2>
-          </div>
-          <div className="space-y-4">
-            {faqData.map((item, idx) => (
-              <div key={idx} className="bg-stone-50 rounded-2xl border border-stone-200 overflow-hidden shadow-sm hover:border-orange-200 transition-colors">
-                <button onClick={() => toggleFaq(idx)} className="w-full flex justify-between items-center p-6 text-left">
-                  <span className="font-bold text-stone-900 text-lg pr-4">{item.q}</span>
-                  <div className={`transition-transform duration-300 ${activeFaq === idx ? 'rotate-180' : ''}`}>
-                    <ChevronDown className={activeFaq === idx ? 'text-orange-700' : 'text-stone-400'}/>
-                  </div>
-                </button>
-                {activeFaq === idx && (
-                  <div className="px-6 pb-6 text-stone-600 font-medium leading-relaxed border-t border-stone-100 pt-4 animate-fade-in-down">
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing / CTA Final */}
-      <section id="prix" className="py-24 bg-stone-900 text-center px-4 overflow-hidden relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-orange-700/10 rounded-full blur-[120px]"></div>
-        <div className="max-w-4xl mx-auto relative z-10">
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-12">L'apaisement commence aujourd'hui.</h2>
-          
-          <div className="bg-white rounded-[2.5rem] p-8 md:p-12 max-w-2xl mx-auto shadow-2xl relative border-t-8 border-orange-700">
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
-              <Gift className="w-3 h-3" /> 2 mois offerts
-            </div>
-            
-            <div className="mb-10">
-              <div className="text-stone-500 font-bold tracking-widest uppercase text-xs mb-3">Abonnement Annuel Premium</div>
-              <div className="flex items-baseline justify-center gap-2">
-                <span className="text-7xl font-bold text-stone-900 tracking-tighter">7,50€</span>
-                <span className="text-stone-500 font-bold text-xl">/ mois</span>
-              </div>
-              <p className="text-stone-400 font-bold text-sm mt-2">Facturé annuellement (89€)</p>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-4 mb-10 text-left">
-               {["Accès illimité 24h/24", "Scripts personnalisés", "Mémoire familiale", "Éducation Positive", "Support immédiat", "Support Prioritaire"].map((benefit, i) => (
-                 <div key={i} className="flex items-center gap-3 text-stone-700 font-bold text-sm">
-                   <div className="w-5 h-5 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 shrink-0">
-                     <Check className="w-3 h-3 stroke-[3px]" />
-                   </div>
-                   {benefit}
-                 </div>
-               ))}
-            </div>
-            
-            <div className="space-y-4">
-              <button className="w-full bg-orange-700 text-white py-5 px-4 rounded-2xl font-black text-lg hover:bg-orange-800 transition shadow-xl shadow-orange-900/30 flex items-center justify-center gap-2 whitespace-nowrap overflow-hidden">
-                <Zap className="w-5 h-5 fill-current shrink-0" /> Commencer l'essai gratuit
-              </button>
-              <p className="text-xs text-stone-400 font-bold uppercase tracking-tight">7 jours d'essai gratuit · Sans engagement</p>
-            </div>
-          </div>
-          
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 text-stone-500 font-bold text-sm uppercase tracking-widest">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-stone-600" /> Paiement Sécurisé
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-stone-600" /> Satisfait ou remboursé
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-stone-200 pt-16 pb-8">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-orange-700 rounded-full flex items-center justify-center text-white font-bold">H</div>
-                <span className="text-xl font-serif font-bold text-stone-900">Harmonie</span>
-              </div>
-              <p className="text-stone-600 font-bold max-w-sm">
-                Rendre la parentalité plus douce, une réponse à la fois.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-extrabold text-stone-900 mb-4 uppercase text-xs tracking-widest">Légal</h4>
-              <ul className="space-y-3 text-sm text-stone-600 font-bold">
-                <li><a href="#" className="hover:text-orange-700 transition">Mentions Légales</a></li>
-                <li><a href="#" className="hover:text-orange-700 transition">Confidentialité</a></li>
-                <li><a href="#" className="hover:text-orange-700 transition">CGV</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-extrabold text-stone-900 mb-4 uppercase text-xs tracking-widest">Contact</h4>
-              <ul className="space-y-3 text-sm text-stone-600 font-bold">
-                <li>hello@harmonie-app.com</li>
-                <li>Paris, France</li>
-              </ul>
-            </div>
-          </div>
-          <div className="text-center text-xs text-stone-400 pt-8 border-t border-stone-100 font-bold uppercase tracking-widest">
-            &copy; 2024 Harmonie App. Tous droits réservés.
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
